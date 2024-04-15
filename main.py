@@ -1,9 +1,9 @@
 import moderngl_window as mglw
-from PIL import Image
-
 
 class App(mglw.WindowConfig):
-    window_size = 500, 500
+    gl_version = (3, 3)
+    window_size = (900, 900)
+    aspect_ratio = window_size[0] / window_size[1]
     resource_dir = "./"
 
     def __init__(self, **kwargs):
@@ -14,9 +14,8 @@ class App(mglw.WindowConfig):
             fragment_shader="./shaders/default.frag",
         )
         self.texture = self.load_texture_2d("./textures/bird.png")
-        self.set_uniform("resolution", (self.window_size))
 
-    def set_uniform(self, u_name, u_value):
+    def set_uniform(self, u_name: str, u_value):
         try:
             self.prog[u_name] = u_value
         except KeyError:
