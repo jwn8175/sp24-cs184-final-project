@@ -8,11 +8,10 @@ in vec2 uv;
 
 out vec4 out_color;
 
-const int ksize = 13;
+const int ksize = 9;
 const int ksize2 = ksize * ksize;
 
 void main() {
-    /* Square implementation of the Kuwahara filter here. */
     out_color = vec4(0.0);
     for (int i = -ksize / 2; i <= ksize / 2; ++i) {
         for (int j = -ksize / 2; j <= ksize / 2; ++j) {
