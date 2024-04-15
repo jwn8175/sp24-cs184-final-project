@@ -3,7 +3,7 @@ from PIL import Image
 
 
 class App(mglw.WindowConfig):
-    window_size = 1600, 900
+    window_size = 500, 500
     resource_dir = "./"
 
     def __init__(self, **kwargs):
@@ -14,7 +14,7 @@ class App(mglw.WindowConfig):
             fragment_shader="./shaders/default.frag",
         )
         self.texture = self.load_texture_2d("./textures/bird.png")
-        self.set_uniform("resolution", self.window_size)
+        self.set_uniform("resolution", (self.window_size))
 
     def set_uniform(self, u_name, u_value):
         try:
