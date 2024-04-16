@@ -4,7 +4,7 @@
 
 ### Default
 
-Running `python3 main.py` will start the program with a default window size of `(900, 900)`.
+Running `python3 main.py` will start the program with a default window size.
 
 ### Custom Window Size
 
@@ -14,9 +14,9 @@ Running `python3 main.py --size [WIDTH]x[HEIGHT]` will start the program with a 
 
 ### Filters
 
-1. Implement the Kuwahara filter
+1. Implement the anisotropic Kuwahara filter
 2. Implement the Voronoi filter
 
 ### General
 
-Implement some command line functionality to allow the user to specify filter type.
+Implement some command line functionality to allow the user to specify input image and filter type.
