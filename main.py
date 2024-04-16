@@ -1,43 +1,63 @@
 import moderngl_window as mglw
 from PIL import Image
 
+
 class App(mglw.WindowConfig):
+    # don't change these variable names, they are inherited from the parent class
     gl_version = (3, 3)
-    window_size = (600, 800)
+    window_size = (300, 400)
     aspect_ratio = window_size[0] / window_size[1]
     resource_dir = "./"
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.quad = mglw.geometry.quad_fs()
-        self.prog = self.load_program(
-            vertex_shader="./shaders/default.vert",
-            fragment_shader="./shaders/kuwahara_circle.frag",
-        )
-        tex_path = "./textures/coco.png"
-        self.texture = self.load_texture_2d(tex_path)
-
-        # get texture img metadata to pass as uniforms
-        img = Image.open(tex_path).convert("RGB")
-        tex_width, tex_height = img.size[0], img.size[1]
-        self.set_uniform("inv_tex_width", 1.0 / tex_width)
-        self.set_uniform("inv_tex_height", 1.0 / tex_height)
+        self.setup_shaders()
+        self.setup_texture()
 
     def set_uniform(self, u_name: str, u_value):
         try:
             self.prog[u_name] = u_value
         except KeyError:
-            print(f"Uniform: {u_name} is not defined in the shader program. ")
-    
+            print(f"INFO - Uniform: {u_name} is not defined in the shader program. ")
+
+    def setup_texture(self):
+        # custom arg parsing is still WIP, if you want to change the 
+        # input texture just enter the path here
+        tex_path = "./textures/coco.png"
+        if self.argv.texture:
+            tex_path = self.argv.texture
+
+        self.texture = self.load_texture_2d(tex_path)
+        # get texture img metadata to pass as uniforms
+        img = Image.open(tex_path).convert("RGB")
+        tex_width, tex_height = img.size[0], img.size[1]
+        self.set_uniform("inv_tex_width", 1.0 / tex_width)
+        self.set_uniform("inv_tex_height", 1.0 / tex_height)
+        img.close()
+
+    def setup_shaders(self):
+        # custom arg parsing is still WIP, if you want to change the 
+        # input shaders just enter the path here
+        vertex_shader_path = "./shaders/default.vert"
+        fragment_shader_path = "./shaders/default.frag"
+        if self.argv.fragment:
+            fragment_shader_path = self.argv.fragment
+
+        self.prog = self.load_program(
+            vertex_shader=vertex_shader_path,
+            fragment_shader=fragment_shader_path,
+        )
+
     @classmethod
     def add_arguments(cls, parser):
         parser.add_argument(
-            '--texture_path',
+            "--texture",
             help="Path to the texture to use",
         )
 
         parser.add_argument(
-            '--fragment_path',
+            "--fragment",
             help="Path to the fragment shader to use",
         )
 
