@@ -8,7 +8,7 @@ in vec2 uv;
 
 out vec4 out_color;
 
-const int kernel_size = 3;
+const int kernel_size = 6;
 const int kernel_size_squared = kernel_size * kernel_size;
 const int square_size = kernel_size * 2 - 1;
 
@@ -78,13 +78,13 @@ void main() {
     average_color[3] = average_color[3] * 1.0 / kernel_size_squared;
     color_variances[3] = variance(s_1[3], s_2[3]);
 
-    if(color_variances[0] <= color_variances[1] && color_variances[0] <= color_variances[2] && color_variances[0] <= color_variances[3]) {
+    if (color_variances[0] <= color_variances[1] && color_variances[0] <= color_variances[2] && color_variances[0] <= color_variances[3]) {
         out_color = average_color[0];
-    } else if(color_variances[1] <= color_variances[0] && color_variances[1] <= color_variances[2] && color_variances[1] <= color_variances[3]) {
+    } else if (color_variances[1] <= color_variances[0] && color_variances[1] <= color_variances[2] && color_variances[1] <= color_variances[3]) {
         out_color = average_color[1];
-    } else if(color_variances[2] <= color_variances[0] && color_variances[2] <= color_variances[1] && color_variances[2] <= color_variances[3]) {
+    } else if (color_variances[2] <= color_variances[0] && color_variances[2] <= color_variances[1] && color_variances[2] <= color_variances[3]) {
         out_color = average_color[2];
-    } else if(color_variances[3] <= color_variances[0] && color_variances[3] <= color_variances[1] && color_variances[3] <= color_variances[2]) {
+    } else if (color_variances[3] <= color_variances[0] && color_variances[3] <= color_variances[1] && color_variances[3] <= color_variances[2]) {
         out_color = average_color[3];
     } else {
         out_color = vec4(0.0);
