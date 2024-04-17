@@ -24,11 +24,11 @@ float variance(float s_1, float s_2) {
 
 void main() {
     /* Square implementation of the Kuwahara filter here. */
-    mat4 average_color;
+    mat4 average_color = mat4(0.0);
 
-    vec4 s_1;
-    vec4 s_2;
-    vec4 color_variances;
+    vec4 s_1 = vec4(0.0);
+    vec4 s_2 = vec4(0.0);
+    vec4 color_variances = vec4(0.0);
 
     for(int x = 1 - kernel_size; x <= 0; x++) {
         for(int y = 1 - kernel_size; y <= 0; y++) {
