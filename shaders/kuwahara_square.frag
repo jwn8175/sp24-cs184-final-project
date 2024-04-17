@@ -87,6 +87,6 @@ void main() {
     } else if (color_variances[3] <= color_variances[0] && color_variances[3] <= color_variances[1] && color_variances[3] <= color_variances[2]) {
         out_color = average_color[3];
     } else {
-        out_color = vec4(0.0);
+        out_color = texture(tex, uv);
     }
 }
