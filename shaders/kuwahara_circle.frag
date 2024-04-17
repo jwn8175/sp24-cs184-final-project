@@ -8,10 +8,14 @@ in vec2 uv;
 
 out vec4 out_color;
 
-const int ksize = 3;
+const int ksize = 10;
 const int N = 8;
-const float q = 8.0;
-const float hardness = 8.0;
+/* After some basic experimentation I've come to the conclusion that using higher values
+   for both of these constants results in a sharper image. */
+/* [1, 18] */
+const float q = 18.0;
+/* [0, 100] */
+const float hardness = 100.0;
 
 void main() {
     float zeta = 1.0 / float(ksize);
@@ -31,7 +35,9 @@ void main() {
     /* For rotation, sin(pi/4). */
     float sin_pi_fourths = 0.707106781187;
 
+    /* Total color for each sector */
     vec4 m[8] = vec4[](vec4(0.0), vec4(0.0), vec4(0.0), vec4(0.0), vec4(0.0), vec4(0.0), vec4(0.0), vec4(0.0));
+    /* Std for each sector. */
     vec3 s[8] = vec3[](vec3(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec3(0.0));
 
     out_color = vec4(0.0);
@@ -39,7 +45,7 @@ void main() {
         for (int j = -ksize; j <= ksize; ++j) {
             vec2 kernel_uv = uv + vec2(float(i) * inv_tex_width, float(j) * inv_tex_height);
             vec3 col = texture(tex, kernel_uv).rgb;
-            vec2 v = vec2(i, j) / ksize;
+            vec2 v = vec2(float(i), float(j)) / float(ksize);
 
             float sum = 0.0;
             float w[8];
@@ -94,14 +100,18 @@ void main() {
 
     vec4 temp = vec4(0.0);
     for (int k = 0; k < N; ++k) {
+        /* Average the color of sector k. */
         m[k].rgb /= m[k].w;
         s[k] = abs(s[k] / m[k].w - m[k].rgb * m[k].rgb);
 
+        /* Compute weight based on std and other values. */
         float sigma2 = s[k].r + s[k].g + s[k].b;
         float w = 1.0 / (1.0 + pow(hardness * 1000.0 * sigma2, 0.5 * q));
-
+        
+        /* Multiply the color of this sector by weight and add it to temp sum. */
         temp += vec4(m[k].rgb * w, w);
     }
 
+    /* Divide temp color sum by sum of weights for final color. */
     out_color = temp / temp.w;
 }
