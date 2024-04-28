@@ -1,11 +1,12 @@
 import moderngl_window as mglw
+import numpy as np
 from PIL import Image
 
 
 class App(mglw.WindowConfig):
     # don't change these variable names, they are inherited from the parent class
     gl_version = (3, 3)
-    window_size = (300, 400)
+    window_size = (600, 800)
     aspect_ratio = window_size[0] / window_size[1]
     resource_dir = "./"
 
@@ -14,6 +15,14 @@ class App(mglw.WindowConfig):
         self.quad = mglw.geometry.quad_fs()
         self.setup_shaders()
         self.setup_texture()
+
+        # initialize vertices for voronoi
+        # should probably edit to under a condition
+        # rng seed
+        rng = np.random.default_rng(12345)
+        n_seeds = 1000
+        self.voronoi_seeds = rng.random((n_seeds, 2))
+        self.set_uniform("seeds", self.voronoi_seeds)
 
     def set_uniform(self, u_name: str, u_value):
         try:
