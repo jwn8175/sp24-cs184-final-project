@@ -8,7 +8,7 @@ in vec2 uv;
 
 out vec4 out_color;
 
-uniform int ksize;
+uniform int kernel_size;
 const int N = 8;
 /* After some basic experimentation I've come to the conclusion that using higher values
    for both of these constants results in a sharper image. */
@@ -18,7 +18,7 @@ const float q = 18.0;
 const float hardness = 100.0;
 
 void main() {
-    float zeta = 1.0 / float(ksize);
+    float zeta = 1.0 / float(kernel_size);
     float zero_cross = 0.58;
     float sin_zero_cross = sin(zero_cross);
     float eta = (zeta + cos(zero_cross)) / (sin_zero_cross * sin_zero_cross);
@@ -41,11 +41,11 @@ void main() {
     vec3 s[8] = vec3[](vec3(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec3(0.0), vec3(0.0));
 
     out_color = vec4(0.0);
-    for (int i = -ksize; i <= ksize; ++i) {
-        for (int j = -ksize; j <= ksize; ++j) {
+    for (int i = -kernel_size; i <= kernel_size; ++i) {
+        for (int j = -kernel_size; j <= kernel_size; ++j) {
             vec2 kernel_uv = uv + vec2(float(i) * inv_tex_width, float(j) * inv_tex_height);
             vec3 col = texture(tex, kernel_uv).rgb;
-            vec2 v = vec2(float(i), float(j)) / float(ksize);
+            vec2 v = vec2(float(i), float(j)) / float(kernel_size);
 
             float sum = 0.0;
             float w[8];
