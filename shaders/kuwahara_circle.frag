@@ -8,7 +8,7 @@ in vec2 uv;
 
 out vec4 out_color;
 
-const int ksize = 10;
+uniform int ksize;
 const int N = 8;
 /* After some basic experimentation I've come to the conclusion that using higher values
    for both of these constants results in a sharper image. */

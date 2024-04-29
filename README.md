@@ -15,7 +15,6 @@ Running `python3 main.py --size [WIDTH]x[HEIGHT]` will start the program with a 
 ### Filters
 
 1. Implement the anisotropic Kuwahara filter
-2. Implement the Voronoi filter
 
 ### General
 
