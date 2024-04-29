@@ -4,7 +4,11 @@
 
 ### Default
 
-Running `python3 main.py` will start the program with a default window size.
+Running `python3 main.py` will start the program with a default window size based on the size of the input texture.
+
+### Adjusting Filter Kernel Size
+
+If running a variant of the Kuwahara filters, you can adjust the kernel size of filter applied to the rendered image by using the `-` and `+` keys.
 
 ### Custom Window Size
 
@@ -12,11 +16,8 @@ Running `python3 main.py --size [WIDTH]x[HEIGHT]` will start the program with a 
 
 ## Project TODOs
 
-### Filters
+### Features
 
 1. Implement the anisotropic Kuwahara filter
-2. Implement the Voronoi filter
-
-### General
-
-Implement some command line functionality to allow the user to specify input image and filter type.
+1. Bypass uniform limit to pass more seeds for the Voronoi filters
+1. Streaming real-time video data from a camera to the program

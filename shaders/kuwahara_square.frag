@@ -8,7 +8,7 @@ in vec2 uv;
 
 out vec4 out_color;
 
-const int kernel_size = 6;
+uniform int kernel_size;
 const int kernel_size_squared = kernel_size * kernel_size;
 const int square_size = kernel_size * 2 - 1;
 
