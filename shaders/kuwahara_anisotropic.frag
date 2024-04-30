@@ -10,6 +10,7 @@ uniform float inv_tex_width;
 uniform float inv_tex_height;
 uniform float tex_height;
 uniform float tex_width;
+uniform float tex_size;
 uniform int kernel_size;
 
 in vec2 uv;
@@ -19,7 +20,8 @@ out vec4 out_color;
 const float PI = 3.14159265358979323846;
 const float inv_root_two_pi = 0.3989422804;
 const float inv_two_pi = 0.15915494309;
-// uniform int radius = 10;
+const float sin_pi_fourths = 0.707106781187;
+
 
 const int N = 8;
 // As per GPU Pro, alpha always equals 1
@@ -121,7 +123,7 @@ vec4 get_gaussian_blur_structure_tensor() {
 
 
 vec4 get_orient_aniso() {
-    vec3 samp = get_gaussian_blur_structure_tensor(); // texture(tex, uv).xyz;
+    vec4 samp = get_gaussian_blur_structure_tensor(); // texture(tex, uv).xyz;
     float eigenval1 = 0.5 * (samp.y + 
                              samp.x + 
                              sqrt(samp.y * samp.y - 
@@ -160,6 +162,13 @@ vec4 get_orient_aniso() {
 // rename later
 void main() {
 
+    float zeta = 1.0 / float(kernel_size);
+    float zero_cross = 0.58;
+    float sin_zero_cross = sin(zero_cross);
+    float eta = (zeta + cos(zero_cross)) / (sin_zero_cross * sin_zero_cross);
+
+    int radius = kernel_size / 2;
+
     // Use the orient_anisotrophy function for this... 
     vec4 eigenvec = get_orient_aniso();     // texture2D(tfm, uv);
 
@@ -168,8 +177,8 @@ void main() {
 
     // Create mean + standard deviation vectors
     for (int i = 0; i < N; i++) {
-        mean[N] = vec4(0.0, 0.0, 0.0, 0.0);
-        standard_dev[N] = vec3(0.0, 0.0, 0.0);
+        mean[i] = vec4(0.0, 0.0, 0.0, 0.0);
+        standard_dev[i] = vec3(0.0, 0.0, 0.0);
     } 
 
     // Calculate the major and minor axis values of the ellipse
@@ -188,21 +197,23 @@ void main() {
     int max_x = int(sqrt(major_axis * major_axis * cos_phi * cos_phi + minor_axis*minor_axis * sin_phi * sin_phi));
     int max_y = int(sqrt(major_axis * major_axis * sin_phi * sin_phi + minor_axis*minor_axis * cos_phi * cos_phi));
 
+    /*
     // Calculate the mean and standard deviation values for the generalized Kuwahara filter
     for (int j = -max_y; j <= max_y; j++) {
-        for (int i = -max_x; i <= max_x; x++) {
+        for (int i = -max_x; i <= max_x; i++) {
             vec2 v = SR * vec2(i, j);
             if (dot(v, v) <= 0.25) {
-                vec3 epic_color = texture(src, uv + vec2(i, j) / (tex_width * tex_height)).rgb;
+                vec3 epic_color = texture(tex, uv + vec2(i, j) / (tex_width * tex_height)).rgb;
                 for (int k = 0; k < N; k++) {
-                    // AUGHHGHGHGHHGHGHGGH   WHAT ARE THE AUTHORS SAMPLING FROM GRAHHHHHH
-                    float weight = texture(AUGH, vec2(0.5, 0.5) + v).x;
+                    // Make this a Gaussian or nah?
+                    float weight = 1.0 / N;
                     mean[k] += vec4(epic_color * weight, weight);
                     standard_dev[k] += epic_color * epic_color * weight;
                 }
             }
         }
     }
+    */
 
 
     // Copy-pasted directly from kuwahara_circle.frag
@@ -259,8 +270,8 @@ void main() {
 
             for (int k = 0 ; k < 8; ++k) {
                 float wk = w[k] * g;
-                m[k] += vec4(col * wk, wk);
-                s[k] += col * col * wk;
+                mean[k] += vec4(col * wk, wk);
+                standard_dev[k] += col * col * wk;
             }
         }
     }
@@ -273,7 +284,7 @@ void main() {
 
         /* Compute weight based on std and other values. */
         float sigma2 = standard_dev[k].r + standard_dev[k].g + standard_dev[k].b;
-        float w = 1.0 / (1.0 + pow(hardness * 1000.0 * sigma2, 0.5 * q));
+        float w = 1.0 / (1.0 + pow(1000.0 * sigma2, 0.5 * q));
         
         /* Multiply the color of this sector by weight and add it to temp sum. */
         temp += vec4(mean[k].rgb * w, w);
