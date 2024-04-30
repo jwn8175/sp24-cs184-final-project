@@ -40,8 +40,8 @@ class App(mglw.WindowConfig):
         img.close()
 
         # for the Kuwahara shaders
-        self.set_uniform("inv_tex_width", 1.0 / inv_tex_width)
-        self.set_uniform("inv_tex_height", 1.0 / inv_tex_height)
+        self.set_uniform("inv_tex_width", inv_tex_width)
+        self.set_uniform("inv_tex_height", inv_tex_height)
         
         # for depth shader optimization when instancing
         r_scale = 50

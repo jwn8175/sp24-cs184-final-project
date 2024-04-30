@@ -9,14 +9,13 @@ in vec2 uv;
 out vec4 out_color;
 
 uniform int kernel_size;
-const int kernel_size_squared = kernel_size * kernel_size;
-const int square_size = kernel_size * 2 - 1;
 
 float illum(vec4 col) {
     return 0.2126 * col[0] + 0.7152 * col[1] + 0.0722 * col[2];
 }
 
 float variance(float s_1, float s_2) {
+    int kernel_size_squared = kernel_size * kernel_size;
     float num_1 = 1.0 / (kernel_size_squared - 1);
     float num_2 = s_2 - (s_1 * s_1) / kernel_size_squared;
     return num_1 * num_2;
@@ -24,6 +23,9 @@ float variance(float s_1, float s_2) {
 
 void main() {
     /* Square implementation of the Kuwahara filter here. */
+    int kernel_size_squared = kernel_size * kernel_size;
+    int square_size = kernel_size * 2 - 1;
+
     mat4 average_color = mat4(0.0);
 
     vec4 s_1 = vec4(0.0);
