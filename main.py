@@ -37,11 +37,15 @@ class App(mglw.WindowConfig):
         # get texture img metadata to pass as uniforms
         img = Image.open(tex_path).convert("RGB")
         inv_tex_width, inv_tex_height = 1.0 / img.size[0], 1.0 / img.size[1]
+        tex_width, tex_height, tex_size = img.size[0], img.size[1], img.size[0] * img.size[1]
         img.close()
 
         # for the Kuwahara shaders
         self.set_uniform("inv_tex_width", inv_tex_width)
         self.set_uniform("inv_tex_height", inv_tex_height)
+        self.set_uniform("tex_height", tex_height)
+        self.set_uniform("tex_width", tex_width)
+        self.set_uniform("tex_size", tex_size)
         
         # for depth shader optimization when instancing
         r_scale = 50
@@ -101,7 +105,7 @@ class App(mglw.WindowConfig):
             self.quad.buffer(self.instance_data, "2f/i", ["in_vertex_seed"])
             self.ctx.enable(moderngl.DEPTH_TEST)
 
-        elif fragment_shader in ["kuwahara_square.frag", "kuwahara_circle.frag"]:
+        elif fragment_shader in ["kuwahara_square.frag", "kuwahara_circle.frag", "kuwahara_anisotropic.frag"]:
             # ksize for kuwahara filters
             self.set_uniform("kernel_size", self.kszie)
 
