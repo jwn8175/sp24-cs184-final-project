@@ -41,8 +41,8 @@ class App(mglw.WindowConfig):
         img.close()
 
         # for the Kuwahara shaders
-        self.set_uniform("inv_tex_width", 1.0 / inv_tex_width)
-        self.set_uniform("inv_tex_height", 1.0 / inv_tex_height)
+        self.set_uniform("inv_tex_width", inv_tex_width)
+        self.set_uniform("inv_tex_height", inv_tex_height)
         self.set_uniform("tex_height", tex_height)
         self.set_uniform("tex_width", tex_width)
         self.set_uniform("tex_size", tex_size)
