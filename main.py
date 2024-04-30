@@ -36,7 +36,17 @@ class App(mglw.WindowConfig):
 
         # get texture img metadata to pass as uniforms
         img = Image.open(tex_path).convert("RGB")
+<<<<<<< Updated upstream
         inv_tex_width, inv_tex_height = 1.0 / img.size[0], 1.0 / img.size[1]
+=======
+        tex_width, tex_height = img.size[0], img.size[1]
+        self.set_uniform("inv_tex_width", 1.0 / tex_width)
+        self.set_uniform("inv_tex_height", 1.0 / tex_height)
+        self.set_uniform("tex_height", tex_height)
+        self.set_uniform("tex_width", tex_width)
+        self.set_uniform("tex_size", tex_width * tex_height)
+
+>>>>>>> Stashed changes
         img.close()
 
         # for the Kuwahara shaders
@@ -76,6 +86,7 @@ class App(mglw.WindowConfig):
             # self.set_uniform("seeds", self.voronoi_seeds)
 
             rng = np.random.default_rng()
+<<<<<<< Updated upstream
             # Max is about 4000
             n_seeds = 4000
             print(f"INFO - Applying Voronoi filter with {n_seeds} seed vertices")
@@ -102,6 +113,12 @@ class App(mglw.WindowConfig):
             self.ctx.enable(moderngl.DEPTH_TEST)
 
         elif fragment_shader in ["kuwahara_square.frag", "kuwahara_circle.frag"]:
+=======
+            n_seeds = 1000
+            self.voronoi_seeds = rng.random((n_seeds, 2))
+            self.set_uniform("seeds", self.voronoi_seeds)
+        elif fragment_shader in ["kuwahara_square.frag", "kuwahara_circle.frag", "kuwahara_anisotropic.frag"]:
+>>>>>>> Stashed changes
             # ksize for kuwahara filters
             self.set_uniform("kernel_size", self.kszie)
 

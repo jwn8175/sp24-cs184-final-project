@@ -8,7 +8,7 @@ in vec2 uv;
 
 out vec4 out_color;
 
-// Heavily inspired by the approach outlined in the following text:
+// Heavily inspired by the approach+code outlined in the following text:
 // https://www.taylorfrancis.com/chapters/edit/10.1201/b10648-22/anisotropic-kuwahara-filtering-gpu
 // This is part of a multi-step process for the anisotropic kuwahara filter.
 // This is the first filter applied.
@@ -35,6 +35,11 @@ void main() {
                  1.0 * texture(tex , uv + vec2( inv_tex_width, inv_tex_height)).rgb
                 ) / 4.0;
 
+    // This line returns the structure tensor for the current pixel
+    // This outputs the tensor elements as E, F, G
+    // Where the tensor itself is structured as a 2x2 matrix::
+    // [ E  F ]
+    // [ F  G ]
     out_color = vec4(dot(u, u), dot(v, v), dot(u, v), 1.0);
 }
 
