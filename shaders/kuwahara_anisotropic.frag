@@ -102,6 +102,7 @@ vec4 get_structure_tensor(vec2 offset) {
 
 // This calculates a smoothed out version of the structure tensor by applying a Gaussian filter to it.
 // Code referenced from https://lisyarus.github.io/blog/posts/blur-coefficients-generator.html
+// Linearly apply a horizontal Gaussian blur to the structure tensor to smooth out gradients/directions
 vec4 get_gaussian_blur_structure_tensor() {
 
     vec2 horizontal_blur = vec2(1, 0);
