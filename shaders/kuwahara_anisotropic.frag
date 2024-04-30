@@ -67,7 +67,7 @@ float gaussian(float sigma, float coor) {
     return inv_root_two_pi * (1.0 / sigma) * exp(-1.0 * (coor * coor) / (2.0 * sigma * sigma));
 }
 
-
+// Code based off of https://www.taylorfrancis.com/chapters/edit/10.1201/b10648-22/anisotropic-kuwahara-filtering-gpu
 vec4 get_structure_tensor(vec2 offset) {
     // vec3 c = texture(tex, uv).rgb;
     
@@ -122,7 +122,7 @@ vec4 get_gaussian_blur_structure_tensor() {
     return gauss_struct_tens / weight_sum;
 }
 
-
+// Code based off of https://www.taylorfrancis.com/chapters/edit/10.1201/b10648-22/anisotropic-kuwahara-filtering-gpu
 vec4 get_orient_aniso() {
     vec4 samp = get_gaussian_blur_structure_tensor(); // texture(tex, uv).xyz;
     float eigenval1 = 0.5 * (samp.y + 
@@ -159,7 +159,8 @@ vec4 get_orient_aniso() {
     return vec4(adjust_eigentex, phi, anisotrophy);
 }
 
-
+// Some of the below code is based off of the approach outlined in:
+// https://www.taylorfrancis.com/chapters/edit/10.1201/b10648-22/anisotropic-kuwahara-filtering-gpu
 void main() {
     float zeta = 1.0 / float(kernel_size);
     float zero_cross = 0.58;
