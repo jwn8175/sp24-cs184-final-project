@@ -10,9 +10,10 @@ uniform float r;
 out vec4 out_color;
 
 void main() {
-    gl_FragDepth = distance(vertex_seed, uv);
-    if (gl_FragDepth > r) {
+    float dist = distance(vertex_seed, uv);
+    if (dist > r) {
         discard;
     }
+    gl_FragDepth = dist;
     out_color = texture(tex, vertex_seed);
 }
