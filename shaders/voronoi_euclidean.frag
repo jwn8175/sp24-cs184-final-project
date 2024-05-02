@@ -16,7 +16,7 @@ void main() {
     float dist = distance(seeds[0], uv);
     vec2 chosen_uv = seeds[0];
 
-    for (int i = 1; i < 1000; ++i) {
+    for (int i = 1; i < 4000; ++i) {
         float current = distance(seeds[i], uv);
         if (current < dist) {
             chosen_uv = seeds[i];

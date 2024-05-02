@@ -20,7 +20,7 @@ void main() {
     float dist = chebyshev_dist(seeds[0], uv);
     vec2 chosen_uv = seeds[0];
 
-    for (int i = 1; i < 1000; ++i) {
+    for (int i = 1; i < 4000; ++i) {
         float current = chebyshev_dist(seeds[i], uv);
         if (current < dist) {
             chosen_uv = seeds[i];
